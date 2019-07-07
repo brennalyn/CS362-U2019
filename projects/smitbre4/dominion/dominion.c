@@ -311,7 +311,7 @@ int buyCard(int supplyPos, struct gameState *state) {
   return 0;
 }
 
-int numHandCards(struct gameState *state) {
+int cardsInHand(struct gameState *state) {
   return state->handCount[ state->whoseTurn ];
 }
 
@@ -860,55 +860,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 
     case minion:
-      //+1 action
-      state->numActions++;
-
-      //discard card from hand
-      discardCard(handPos, currentPlayer, state, 0);
-
-      if (choice1)		//+2 coins
-	{
-	  state->coins = state->coins + 2;
-	}
-
-      else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
-	{
-	  //discard hand
-	  while(numHandCards(state) > 0)
-	    {
-	      discardCard(handPos, currentPlayer, state, 0);
-	    }
-
-	  //draw 4
-	  for (i = 0; i < 4; i++)
-	    {
-	      drawCard(currentPlayer, state);
-	    }
-
-	  //other players discard hand and redraw if hand size > 4
-	  for (i = 0; i < state->numPlayers; i++)
-	    {
-	      if (i != currentPlayer)
-		{
-		  if ( state->handCount[i] > 4 )
-		    {
-		      //discard hand
-		      while( state->handCount[i] > 0 )
-			{
-			  discardCard(handPos, i, state, 0);
-			}
-
-		      //draw 4
-		      for (j = 0; j < 4; j++)
-			{
-			  drawCard(i, state);
-			}
-		    }
-		}
-	    }
-
-	}
-      return 0;
+    break;
 
     case steward:
       if (choice1 == 1)
@@ -1169,6 +1121,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   return -1;
 }
 
+
 int discardCard(int handPos, int currentPlayer, struct gameState *state, int trashFlag)
 {
   //if card is not trashed, added to Played pile
@@ -1192,12 +1145,13 @@ int discardCard(int handPos, int currentPlayer, struct gameState *state, int tra
   return 0;
 }
 
+
 int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
 {
   //Note: supplyPos is enum of choosen card
 
   //check if supply pile is empty (0) or card is not used in game (-1)
-  if ( supplyCount(supplyPos, state) < 1 )
+  if (supplyCount(supplyPos, state) < 1)
     {
       return -1;
     }
@@ -1229,6 +1183,7 @@ int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
   return 0;
 }
 
+
 int updateCoins(int player, struct gameState *state, int bonus)
 {
   int i;
@@ -1258,9 +1213,41 @@ int updateCoins(int player, struct gameState *state, int bonus)
   return 0;
 }
 
+
+int minion (int choice, struct gameState* state) {
+  int currentPlayer = state->whoseTurn;
+  //+1 action
+  state->numActions++;
+  //discard card from hand
+  discardCard(handPos, currentPlayer, state, 0);
+  if (choice == 1) {
+    //+2 coins
+    state->coins += 2;
+  } else {
+    //other players discard hand and redraw if hand size > 4
+    for (int i = 0; i < state->numPlayers; i++) {
+      if (i == currentPlayer || state->handCount[i] >= 5) {
+        //if it is the currentPlayer or anyone else with 5+ cards
+        //discard first card in hand until empty
+        while(state->handCount[i] > 0) {
+          discardCard(0, i, state, 0);
+        }
+        //draw 4
+        for (int j = 0; j < 4; j++) {
+          drawCard(i, state);
+        }
+      }
+    }
+  }
+  return 0;
+}
+
+
 int baron (int choice, struct gameState* state) {
+  //discard card from hand
   int currentPlayer = state->whoseTurn;
   state->numBuys++;//Increase buys by 1!
+  discardCard(handPos, currentPlayer, state, 0);
   if (choice > 0) {//Boolean for going to discard an estate
     int p = 0;//Iterator for hand!
     int card_not_discarded = 1;//Flag for discard set!
@@ -1286,6 +1273,7 @@ int baron (int choice, struct gameState* state) {
   } else {
     gainCard(estate, state, 0, currentPlayer);//Gain an estate
   }
+
   return 0;
 }
 //end of dominion.c
