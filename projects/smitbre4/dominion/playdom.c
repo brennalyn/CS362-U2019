@@ -4,7 +4,8 @@
 #include <stdlib.h>
 
 int main (int argc, char** argv) {
-  struct gameState G;
+  //Should switch this later to make game a reference?
+  struct gameState G = *(newGame());
   int k[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse,
            sea_hag, tribute, smithy};
 
