@@ -25,7 +25,7 @@ int main (int argc, char** argv) {
     money = 0;
     smithyPos = -1;
     adventurerPos = -1;
-    for (i = 0; i < numHandCards(&G); i++) {
+    for (i = 0; i < cardsInHand(&G); i++) {
       if (handCard(i, &G) == copper)
     money++;
       else if (handCard(i, &G) == silver)
@@ -45,7 +45,7 @@ int main (int argc, char** argv) {
         printf("smithy played.\n");
         money = 0;
         i=0;
-        while(i<numHandCards(&G)){
+        while(i<cardsInHand(&G)){
           if (handCard(i, &G) == copper){
             playCard(i, -1, -1, -1, &G);
             money++;
@@ -89,7 +89,7 @@ int main (int argc, char** argv) {
         playCard(adventurerPos, -1, -1, -1, &G);
         money = 0;
         i=0;
-        while(i<numHandCards(&G)){
+        while(i<cardsInHand(&G)){
           if (handCard(i, &G) == copper){
             playCard(i, -1, -1, -1, &G);
             money++;
