@@ -173,7 +173,7 @@ int main(int argc, char* argv[]) {
 
 		} else
 		if(COMPARE(command, numH) == 0) {
-			int numCards = numHandCards(game);
+			int numCards = cardsInHand(game);
 			printf("There are %d cards in your hand.\n", numCards);
 		} else
 		if(COMPARE(command, play) == 0) {

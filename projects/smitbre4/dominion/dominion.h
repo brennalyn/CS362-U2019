@@ -7,7 +7,7 @@
 #define MAX_DECK 500
 
 #define MAX_PLAYERS 4
-
+#define CARD_COUNT 27
 #define DEBUG 0
 
 /* http://dominion.diehrstraits.com has card texts */
@@ -67,8 +67,8 @@ struct gameState {
   int handCount[MAX_PLAYERS];
   int deck[MAX_PLAYERS][MAX_DECK];
   int deckCount[MAX_PLAYERS];
-  int discard[MAX_PLAYERS][MAX_DECK];
-  int discardCount[MAX_PLAYERS];
+  int discard[MAX_PLAYERS][MAX_DECK]; //Each players' discard pile
+  int discardCount[MAX_PLAYERS];  //Total cards in player's discard pile?
   int playedCards[MAX_DECK];
   int playedCardCount;
 };
@@ -85,7 +85,7 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state);
 /* Responsible for initializing all supplies, and shuffling deck and
    drawing starting hands for all players.  Check that 10 cards selected
-   are in fact (different) kingdom cards, and that numPlayers is valid. 
+   are in fact (different) kingdom cards, and that numPlayers is valid.
 
 Cards not in game should initialize supply position to -1 */
 
@@ -100,7 +100,7 @@ int playCard(int handPos, int choice1, int choice2, int choice3,
 int buyCard(int supplyPos, struct gameState *state);
 /* Buy card with supply index supplyPos */
 
-int numHandCards(struct gameState *state);
+int cardsInHand(struct gameState *state);
 /* How many cards current player has in hand */
 
 int handCard(int handNum, struct gameState *state);
@@ -127,5 +127,15 @@ int scoreFor(int player, struct gameState *state);
 int getWinners(int players[MAX_PLAYERS], struct gameState *state);
 /* Set array position of each player who won (remember ties!) to
    1, others to 0 */
+
+int ambassadorEffect(int handPos, int choicePos, int numCopies, struct gameState* state);
+
+int baronEffect(int handPos, int discardEstate, struct gameState* state);
+
+int mineEffect(int handPos, int trashPos, int tradeCard, struct gameState* state);
+
+int minionEffect(int handPos, int cardOption, struct gameState* state);
+
+int tributeEffect(int handPos, struct gameState* state);
 
 #endif
