@@ -37,14 +37,14 @@ int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
 
 int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state) {
-
+printf("Game initalizing");
   int i;
   int j;
   int it;
   //set up random number generator
   SelectStream(1);
   PutSeed((long)randomSeed);
-
+  printf("Game initalizing");
   //check number of players
   if (numPlayers > MAX_PLAYERS || numPlayers < 2)
     {
@@ -1106,7 +1106,7 @@ int baronEffect(int handPos, int discardEstate, struct gameState* state) {
   if (discardEstate) {   //Boolean for going to discard an estate (choice1 should be > 0)
     int p = 0;//Iterator for hand!
     int card_not_discarded = 1;//Flag for discard set!
-    while(card_not_discarded){
+    while(card_not_discarded) {
       //if we've searched the whole hand
       if (p >= state->handCount[currentPlayer]){
         if(DEBUG) {
