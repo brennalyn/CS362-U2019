@@ -37,14 +37,14 @@ int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
 
 int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state) {
-printf("Game initalizing");
+
   int i;
   int j;
   int it;
   //set up random number generator
   SelectStream(1);
   PutSeed((long)randomSeed);
-  printf("Game initalizing");
+  //printf("Game initalizing");
   //check number of players
   if (numPlayers > MAX_PLAYERS || numPlayers < 2)
     {
@@ -195,7 +195,6 @@ printf("Game initalizing");
   }
 
   updateCoins(state->whoseTurn, state, 0);
-
   return 0;
 }
 
@@ -1114,6 +1113,7 @@ int baronEffect(int handPos, int discardEstate, struct gameState* state) {
           printf("Must gain an estate if there are any\n");
         }
         gainCard(estate, state, 0, currentPlayer);
+        card_not_discarded = 0;
       } else if (state->hand[currentPlayer][p] == estate){//Found an estate card!
         state->coins += 4;//Add 4 coins to the amount of coins
         //Discard the estate card

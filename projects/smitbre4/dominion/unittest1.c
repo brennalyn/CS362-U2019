@@ -26,9 +26,9 @@ void resetHand(struct gameState* G, int p, int handCount) {
 
 void asserttrue(int result) {
   if (result) {
-    printf("FAIL ");
-  } else {
     printf("SUCCESS ");
+  } else {
+    printf("FAIL ");
   }
 }
 
@@ -48,13 +48,15 @@ int main() {
         for (handCount = 1; handCount <= maxHandCount; handCount++)
         {
 
+
                 if (NOISY_TEST == 1) {
                   printf("Test player %d with %d card(s) in hand.\n", p, handCount);
+
                 }
-                
-                printf("Test");
+
                 //memset(G, 23, sizeof(struct gameState));   // clear the game state
                 r = initializeGame(numPlayer, k, seed, G); // initialize a new game
+
                 G->whoseTurn = p;
                 G->handCount[p] = handCount;                 // set the number of cards on hand
                 resetHand(G, p, handCount);
@@ -106,10 +108,9 @@ int main() {
                   printf("coins = %d, expected = %d\n", G->coins, 0);
                 #endif
 
+                printf("\n");  
         }
     }
-
-    printf("All tests passed!\n");
 
     return 0;
 }
