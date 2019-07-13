@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-
 int compare(const void* a, const void* b) {
   if (*(int*)a > *(int*)b)
     return 1;
@@ -1059,9 +1058,10 @@ int ambassadorEffect(int handPos, int choicePos, int numCopies, struct gameState
       j++;
     }
   }
+  
   //used to check if player has enough cards to discard
   if (j < numCopies) {
-    return -1;
+    return -2;
   }
 
   if (DEBUG)
@@ -1071,14 +1071,18 @@ int ambassadorEffect(int handPos, int choicePos, int numCopies, struct gameState
   state->supplyCount[revealedCard] += numCopies;
 
   //each other player gains a copy of revealed card starting left and going around
-  //need to edit this loop
-  int nextPlayer = currentPlayer;
+  int nextPlayer;
+  if (currentPlayer == (state->numPlayers - 1)){
+    nextPlayer = 0;
+  } else {
+    nextPlayer = currentPlayer + 1;
+  }
   while (nextPlayer != currentPlayer) {
+    gainCard(revealedCard, state, 0, nextPlayer);
+    nextPlayer++;
     if (nextPlayer > (state->numPlayers - 1)){
       nextPlayer = 0;
     }
-    gainCard(revealedCard, state, 0, nextPlayer);
-    nextPlayer++;
   }
 
   //discard played card from hand
@@ -1117,7 +1121,7 @@ int baronEffect(int handPos, int discardEstate, struct gameState* state) {
       } else if (state->hand[currentPlayer][p] == estate){//Found an estate card!
         state->coins += 4;//Add 4 coins to the amount of coins
         //Discard the estate card
-        discardCard(p, currentPlayer, state, 1);
+        discardCard(p, currentPlayer, state, 0);
         card_not_discarded = 0;//Exit the loop
 
       } else {
@@ -1162,7 +1166,7 @@ int minionEffect(int handPos, int cardOption, struct gameState* state) {
   int currentPlayer = state->whoseTurn;
   //+1 action
   state->numActions++;
-  if (cardOption > 1) {   //boolean for chaice of card options
+  if (cardOption > 1) {   //boolean for choice of card options
     //+2 coins
     state->coins += 2;
   } else {

@@ -48,67 +48,66 @@ int main() {
         for (handCount = 1; handCount <= maxHandCount; handCount++)
         {
 
+          if (NOISY_TEST == 1) {
+            printf("Test player %d with %d card(s) in hand.\n", p, handCount);
+          }
 
-                if (NOISY_TEST == 1) {
-                  printf("Test player %d with %d card(s) in hand.\n", p, handCount);
+          //memset(G, 23, sizeof(struct gameState));   // clear the game state
+          r = initializeGame(numPlayer, k, seed, G); // initialize a new game
 
-                }
+          G->whoseTurn = p;
+          G->handCount[p] = handCount;                 // set the number of cards on hand
+          resetHand(G, p, handCount);
 
-                //memset(G, 23, sizeof(struct gameState));   // clear the game state
-                r = initializeGame(numPlayer, k, seed, G); // initialize a new game
+          //tests for discarding estate choice but no estate in hand
+          int deckStart = fullDeckCount(p, estate, G);
+          baronEffect(0, 1, G);
+          asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
+          #if (NOISY_TEST == 1)
+            printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);
+          #endif
+          asserttrue(G->coins == 0);
+          #if (NOISY_TEST == 1)
+            printf("coins = %d, expected = %d\n", G->coins, 0);
+          #endif
 
-                G->whoseTurn = p;
-                G->handCount[p] = handCount;                 // set the number of cards on hand
-                resetHand(G, p, handCount);
+          //clear data
+          resetHand(G, p, handCount);
 
-                //tests for discarding estate choice but no estate in hand
-                int deckStart = fullDeckCount(p, estate, G);
-                baronEffect(0, 1, G);
-                asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
-                #if (NOISY_TEST == 1)
-                  printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);
-                #endif
-                asserttrue(G->coins == 0);
-                #if (NOISY_TEST == 1)
-                  printf("coins = %d, expected = %d\n", G->coins, 0);
-                #endif
+          //This test only works if there are 2 or more cards in hand
+          if (handCount > 1) {
+            G->handCount[p] = handCount; 
+            G->hand[p][handCount-1] = estate;
 
-                //clear data
-                resetHand(G, p, handCount);
+            //tests for discarding estate w/ estate in hand
+            deckStart = fullDeckCount(p, estate, G);
+            baronEffect(0, 1, G);
+            asserttrue(fullDeckCount(p, estate, G) == deckStart);
+            #if (NOISY_TEST == 1)
+              printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart);
+            #endif
+            asserttrue(G->coins == 4);
+            #if (NOISY_TEST == 1)
+              printf("coins = %d, expected = %d\n", G->coins, 4);
+            #endif
+          }
 
-                //This test only works if there are 2 or more cards in hand
-                if (handCount > 1) {
-                    G->hand[p][handCount-1] = estate;
+          resetHand(G, p, handCount);
 
-                  //tests for discarding estate w/ estate in hand
-                  deckStart = fullDeckCount(p, estate, G);
-                  baronEffect(0, 1, G);
-                  asserttrue(fullDeckCount(p, estate, G) == deckStart);
-                  #if (NOISY_TEST == 1)
-                    printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart);
-                  #endif
-                  asserttrue(G->coins == 4);
-                  #if (NOISY_TEST == 1)
-                    printf("coins = %d, expected = %d\n", G->coins, 4);
-                  #endif
-                }
+          //tests for gaining estate and changing hand position
+          deckStart = fullDeckCount(p, estate, G);
+          G->hand[p][handCount-1] = baron;
+          baronEffect(handCount-1, 0, G);
+          asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
+          #if (NOISY_TEST == 1)
+            printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);
+          #endif
+          asserttrue(G->coins == 0);
+          #if (NOISY_TEST == 1)
+            printf("coins = %d, expected = %d\n", G->coins, 0);
+          #endif
 
-                resetHand(G, p, handCount);
-
-                //tests for gaining estate and changing hand position
-                deckStart = fullDeckCount(p, estate, G);
-                G->hand[p][handCount-1] = baron;
-                baronEffect(handCount-1, 0, G);
-                asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
-                #if (NOISY_TEST == 1)
-                  printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);
-                #endif
-                asserttrue(G->coins == 0);
-                #if (NOISY_TEST == 1)
-                  printf("coins = %d, expected = %d\n", G->coins, 0);
-                #endif
-
-                printf("\n");  
+          printf("\n");
         }
     }
 

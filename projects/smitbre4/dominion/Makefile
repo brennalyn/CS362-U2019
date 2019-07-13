@@ -13,6 +13,12 @@ playdom: dominion.o playdom.c
 unittest1: unittest1.c dominion.o rngs.o
 	gcc -o unittest1 -g  unittest1.c dominion.o rngs.o $(CFLAGS)
 
+unittest2: unittest2.c dominion.o rngs.o
+	gcc -o unittest2 -g  unittest2.c dominion.o rngs.o $(CFLAGS)
+
+unittest3: unittest3.c dominion.o rngs.o
+	gcc -o unittest3 -g  unittest3.c dominion.o rngs.o $(CFLAGS)
+
 testDrawCard: testDrawCard.c dominion.o rngs.o
 	gcc  -o testDrawCard -g  testDrawCard.c dominion.o rngs.o $(CFLAGS)
 
@@ -33,6 +39,12 @@ runtests: testDrawCard
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
+unittestresult: unittest1 unittest2 unittest3
+	./unittest1 &> unittestresult.out
+	./unittest2 &> unittestresult.out
+	./unittest3 &> unittestresult.out
+	gcov dominion.c >> unittestresult.out
+	cat dominion.c.gcov >> unittestresult.out
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
