@@ -1058,7 +1058,7 @@ int ambassadorEffect(int handPos, int choicePos, int numCopies, struct gameState
       j++;
     }
   }
-  
+
   //used to check if player has enough cards to discard
   if (j < numCopies) {
     return -2;
@@ -1208,6 +1208,9 @@ int tributeEffect(int handPos, struct gameState* state) {
       drawCard(nextPlayer, state);
       newCardPos = state->handCount[nextPlayer] - 1;
       tributeRevealedCards[i] = state->hand[nextPlayer][newCardPos];
+      if (DEBUG) {
+        printf("Player %d revealed a %d\n", nextPlayer, tributeRevealedCards[i]);
+      }
       discardCard(newCardPos, nextPlayer, state, 0);
     }
   } else {
@@ -1221,16 +1224,18 @@ int tributeEffect(int handPos, struct gameState* state) {
     tributeRevealedCards[1] = -1;
   }
 
-  for (int i = 0; i < 3; i++){
-    if (tributeRevealedCards[i] == -1)
+  for (int i = 0; i < 2; i++){
+    if (tributeRevealedCards[i] == -1){
       break;
-
+    }
     if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold){//Treasure cards
       state->coins += 2;
     } else if ((tributeRevealedCards[i] >= estate && tributeRevealedCards[i] <= province) || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall){//Victory Card Found
       drawCard(currentPlayer, state);
       drawCard(currentPlayer, state);
-      state->handCount[currentPlayer] += 2;
+      //state->handCount[currentPlayer] += 2;
+    } else if (tributeRevealedCards[i] == curse) {
+      continue;
     } else {//Action Card
       state->numActions += 2;
     }
