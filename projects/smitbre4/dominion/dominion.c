@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 
+
 int compare(const void* a, const void* b) {
   if (*(int*)a > *(int*)b)
     return 1;
@@ -34,68 +35,55 @@ int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
   return k;
 }
 
-int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
-		   struct gameState *state) {
+int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed, struct gameState *state) {
 
   int i;
   int j;
   int it;
+
   //set up random number generator
   SelectStream(1);
   PutSeed((long)randomSeed);
-  //printf("Game initalizing");
+
   //check number of players
-  if (numPlayers > MAX_PLAYERS || numPlayers < 2)
-    {
-      return -1;
-    }
+  if (numPlayers > MAX_PLAYERS || numPlayers < 2) {
+    return -1;
+  }
 
   //set number of players
   state->numPlayers = numPlayers;
 
   //check selected kingdom cards are different
-  for (i = 0; i < 10; i++)
-    {
-      for (j = 0; j < 10; j++)
-        {
-	  if (j != i && kingdomCards[j] == kingdomCards[i])
-	    {
-	      return -1;
-	    }
-        }
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      if (j != i && kingdomCards[j] == kingdomCards[i]) {
+        return -1;
+      }
     }
-
+  }
 
   //initialize supply
   ///////////////////////////////
 
   //set number of Curse cards
-  if (numPlayers == 2)
-    {
-      state->supplyCount[curse] = 10;
-    }
-  else if (numPlayers == 3)
-    {
-      state->supplyCount[curse] = 20;
-    }
-  else
-    {
-      state->supplyCount[curse] = 30;
-    }
+  if (numPlayers == 2) {
+    state->supplyCount[curse] = 10;
+  } else if (numPlayers == 3) {
+    state->supplyCount[curse] = 20;
+  } else {
+    state->supplyCount[curse] = 30;
+  }
 
   //set number of Victory cards
-  if (numPlayers == 2)
-    {
-      state->supplyCount[estate] = 8;
-      state->supplyCount[duchy] = 8;
-      state->supplyCount[province] = 8;
-    }
-  else
-    {
-      state->supplyCount[estate] = 12;
-      state->supplyCount[duchy] = 12;
-      state->supplyCount[province] = 12;
-    }
+  if (numPlayers == 2) {
+    state->supplyCount[estate] = 8;
+    state->supplyCount[duchy] = 8;
+    state->supplyCount[province] = 8;
+  } else {
+    state->supplyCount[estate] = 12;
+    state->supplyCount[duchy] = 12;
+    state->supplyCount[province] = 12;
+  }
 
   //set number of Treasure cards
   state->supplyCount[copper] = 60 - (7 * numPlayers);
@@ -103,65 +91,52 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   state->supplyCount[gold] = 30;
 
   //set number of Kingdom cards
-  for (i = adventurer; i <= treasure_map; i++)       	//loop all cards
-    {
-      for (j = 0; j < 10; j++)           		//loop chosen cards
-	{
-	  if (kingdomCards[j] == i)
-	    {
-	      //check if card is a 'Victory' Kingdom card
-	      if (kingdomCards[j] == great_hall || kingdomCards[j] == gardens)
-		{
-		  if (numPlayers == 2){
-		    state->supplyCount[i] = 8;
-		  }
-		  else{ state->supplyCount[i] = 12; }
-		}
-	      else
-		{
-		  state->supplyCount[i] = 10;
-		}
+  for (i = adventurer; i <= treasure_map; i++) {
+    for (j = 0; j < 10; j++) {
+      if (kingdomCards[j] == i) {
+	     //check if card is a 'Victory' Kingdom card
+	      if (kingdomCards[j] == great_hall || kingdomCards[j] == gardens) {
+	        if (numPlayers == 2){
+	          state->supplyCount[i] = 8;
+	        } else {
+            state->supplyCount[i] = 12;
+          }
+        } else {
+          state->supplyCount[i] = 10;
+        }
 	      break;
-	    }
-	  else    //card is not in the set choosen for the game
-	    {
+	    } else {
+        //card is not in the set choosen for the game
 	      state->supplyCount[i] = -1;
 	    }
-	}
-
-    }
+	  }
+  }
 
   ////////////////////////
   //supply intilization complete
 
   //set player decks
-  for (i = 0; i < numPlayers; i++)
-    {
-      state->deckCount[i] = 0;
-      for (j = 0; j < 3; j++)
-	{
-	  state->deck[i][j] = estate;
-	  state->deckCount[i]++;
-	}
-      for (j = 3; j < 10; j++)
-	{
-	  state->deck[i][j] = copper;
-	  state->deckCount[i]++;
-	}
+  for (i = 0; i < numPlayers; i++) {
+    state->deckCount[i] = 0;
+    for (j = 0; j < 3; j++)	{
+      state->deck[i][j] = estate;
+      state->deckCount[i]++;
     }
+    for (j = 3; j < 10; j++) {
+      state->deck[i][j] = copper;
+      state->deckCount[i]++;
+    }
+  }
 
   //shuffle player decks
-  for (i = 0; i < numPlayers; i++)
-    {
-      if ( shuffle(i, state) < 0 )
-	{
-	  return -1;
-	}
-    }
+  for (i = 0; i < numPlayers; i++) {
+    if ( shuffle(i, state) < 0 ) {
+	     return -1;
+	  }
+  }
 
   //draw player hands
-  for (i = 0; i < numPlayers; i++)
-    {
+  for (i = 0; i < numPlayers; i++) {
       //initialize hand size to zero
       state->handCount[i] = 0;
       state->discardCount[i] = 0;
@@ -170,13 +145,12 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
       //	{
       //	  drawCard(i, state);
       //	}
-    }
+  }
 
   //set embargo tokens to 0 for all supply piles
-  for (i = 0; i <= treasure_map; i++)
-    {
-      state->embargoTokens[i] = 0;
-    }
+  for (i = 0; i <= treasure_map; i++) {
+    state->embargoTokens[i] = 0;
+  }
 
   //initialize first player's turn
   state->outpostPlayed = 0;
@@ -186,7 +160,6 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   state->playedCardCount = 0;
   state->whoseTurn = 0;
   state->handCount[state->whoseTurn] = 0;
-  //int it; move to top
 
   //Moved draw cards to here, only drawing at the start of a turn
   for (it = 0; it < 5; it++){
@@ -197,6 +170,7 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   return 0;
 }
 
+
 int shuffle(int player, struct gameState *state) {
   int newDeck[MAX_DECK];
   int newDeckPos = 0;
@@ -205,6 +179,7 @@ int shuffle(int player, struct gameState *state) {
 
   if (state->deckCount[player] < 1)
     return -1;
+
   qsort ((void*)(state->deck[player]), state->deckCount[player], sizeof(int), compare);
   /* SORT CARDS IN DECK TO ENSURE DETERMINISM! */
 
@@ -358,8 +333,7 @@ int endTurn(struct gameState *state) {
   //Code for determining the player
   if (currentPlayer < (state->numPlayers - 1)){
     state->whoseTurn = currentPlayer + 1;//Still safe to increment
-  }
-  else{
+  } else {
     state->whoseTurn = 0;//Max player has been reached, loop back around to player 1
   }
 
@@ -453,63 +427,49 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state) {
   int currentPlayer;
 
   //get score for each player
-  for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      //set unused player scores to -9999
-      if (i >= state->numPlayers)
-	{
-	  players[i] = -9999;
-	}
-      else
-	{
-	  players[i] = scoreFor (i, state);
-	}
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    //set unused player scores to -9999
+    if (i >= state->numPlayers) {
+      players[i] = -9999;
+    } else {
+      players[i] = scoreFor(i, state);
     }
+  }
 
   //find highest score
   j = 0;
-  for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      if (players[i] > players[j])
-	{
-	  j = i;
-	}
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    if (players[i] > players[j]) {
+      j = i;
     }
+  }
   highScore = players[j];
 
   //add 1 to players who had less turns
   currentPlayer = state->whoseTurn;
-  for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      if ( players[i] == highScore && i > currentPlayer )
-	{
-	  players[i]++;
-	}
+  for (i = 0; i < MAX_PLAYERS; i++){
+    if (players[i] == highScore && i > currentPlayer) {
+      players[i]++;
     }
+  }
 
   //find new highest score
   j = 0;
-  for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      if ( players[i] > players[j] )
-	{
-	  j = i;
-	}
-    }
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    if ( players[i] > players[j] ){
+      j = i;
+	  }
+  }
   highScore = players[j];
 
   //set winners in array to 1 and rest to 0
-  for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      if ( players[i] == highScore )
-	{
-	  players[i] = 1;
-	}
-      else
-	{
-	  players[i] = 0;
-	}
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    if ( players[i] == highScore ){
+      players[i] = 1;
+    } else {
+      players[i] = 0;
     }
+  }
 
   return 0;
 }
