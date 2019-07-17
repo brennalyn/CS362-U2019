@@ -8,7 +8,7 @@
 
 #define MAX_PLAYERS 4
 #define CARD_COUNT 27
-#define DEBUG 0
+#define DEBUG 1
 
 /* http://dominion.diehrstraits.com has card texts */
 /* http://dominion.isotropic.org has other stuff */
@@ -30,7 +30,7 @@ enum CARD
    council_room,
    feast, /* choice1 is supply # of card gained) */
    gardens,
-   mine, /* choice1 is hand# of money to trash, choice2 is supply# of
+   mine, /* choice1 is hand# of money to trash (-1 if chose not to trash), choice2 is supply# of
 	    money to put in hand */
    remodel, /* choice1 is hand# of card to remodel, choice2 is supply# */
    smithy,
