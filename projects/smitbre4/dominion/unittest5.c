@@ -109,7 +109,7 @@ int main() {
           #endif
           asserttrue(fullDeckCount(p, copper, G) == copperStart-1);
           #if (NOISY_TEST == 1)
-            printf("player has %d copper cards, expected = %d\n", fullDeckCount(p, silver, G), copperStart-1);
+            printf("player has %d copper cards, expected = %d\n", fullDeckCount(p, copper, G), copperStart-1);
           #endif
 
           //Test to make sure desired card was drawn from deck and chosen card was trashed
