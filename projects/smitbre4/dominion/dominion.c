@@ -1114,6 +1114,7 @@ int baronEffect(int handPos, int discardEstate, struct gameState* state) {
           printf("Must gain an estate if there are any\n");
         }
         gainCard(estate, state, 0, currentPlayer);
+        card_not_discarded = 0;//Exit the loop
       } else if (state->hand[currentPlayer][p] == estate){//Found an estate card!
         state->coins += 4;//Add 4 coins to the amount of coins
         //Discard the estate card
@@ -1217,7 +1218,7 @@ int tributeEffect(int handPos, struct gameState* state) {
     tributeRevealedCards[1] = -1;
   }
 
-  for (int i = 0; i < 3; i++){
+  for (int i = 0; i < 2; i++){
     if (tributeRevealedCards[i] == -1)
       break;
 
@@ -1226,8 +1227,8 @@ int tributeEffect(int handPos, struct gameState* state) {
     } else if ((tributeRevealedCards[i] >= estate && tributeRevealedCards[i] <= province) || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall){//Victory Card Found
       drawCard(currentPlayer, state);
       drawCard(currentPlayer, state);
-      state->handCount[currentPlayer] += 2;
-    } else {//Action Card
+      //state->handCount[currentPlayer] += 2;
+    } else {      //Action Card
       state->numActions += 2;
     }
   }
