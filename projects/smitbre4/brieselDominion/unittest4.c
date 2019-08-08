@@ -65,7 +65,7 @@ int main() {
           //Test to make sure nothing was gained when the next player has empty discard and deck
           G->deckCount[nextPlayer] = G->discardCount[nextPlayer] = 0;   //set nextplayer to have 0 cards outside hand
           int coinStart = G->coins;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -73,14 +73,14 @@ int main() {
           resetHand(G, p, handCount);
 
           int actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->numActions == actionStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d actions, expected = %d\n", p, G->numActions, actionStart);
           #endif
           resetHand(G, p, handCount);
 
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->handCount[p] == handCount-1);
           #if (NOISY_TEST == 1)
             printf("player %d has %d cards in hand, expected = %d\n", p, G->handCount[p], handCount-1);
@@ -92,7 +92,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 1] = G->deck[nextPlayer][deckCounter - 2] = gold;   //set top 2 of next player deck to a treasure card
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart + 2);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart+2);
@@ -117,7 +117,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = copper;      //set nextplayer deck to have 2 diff treasures
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart + 4);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart+4);
@@ -138,7 +138,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = baron;      //set nextplayer deck to have 2 diff types
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart+2);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart+2);
@@ -158,7 +158,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 1] = G->deck[nextPlayer][deckCounter - 2] = mine;   //set top 2 of next player deck to a action card
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -179,7 +179,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = village;   //set top 2 of next player deck to a action card
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -200,7 +200,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = duchy;      //set nextplayer deck to have 2 diff types
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -220,7 +220,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 1] = G->deck[nextPlayer][deckCounter - 2] = province;   //set top 2 of next player deck to a treasure card
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -241,7 +241,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = gardens;   //set top 2 of next player deck to a treasure card
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);
@@ -262,7 +262,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 2] = great_hall;      //set nextplayer deck to have 2 diff types
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart+2);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart+2);
@@ -283,7 +283,7 @@ int main() {
           G->deck[nextPlayer][deckCounter - 1] = G->deck[nextPlayer][deckCounter - 2] = curse;      //set nextplayer deck to have 2 diff types
           coinStart = G->coins;
           actionStart = G->numActions;
-          tributeEffect(0, G);
+          playTribute(p, G);
           asserttrue(G->coins == coinStart);
           #if (NOISY_TEST == 1)
             printf("player %d has %d coins, expected = %d\n", p, G->coins, coinStart);

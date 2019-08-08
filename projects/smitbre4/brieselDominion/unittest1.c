@@ -61,7 +61,7 @@ int main() {
 
           //tests for discarding estate choice but no estate in hand
           int deckStart = fullDeckCount(p, estate, G);
-          baronEffect(0, 1, G);
+          playBaron(1, 0, p, G);
           asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
           #if (NOISY_TEST == 1)
             printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);
@@ -76,12 +76,12 @@ int main() {
 
           //This test only works if there are 2 or more cards in hand
           if (handCount > 1) {
-            G->handCount[p] = handCount; 
+            G->handCount[p] = handCount;
             G->hand[p][handCount-1] = estate;
 
             //tests for discarding estate w/ estate in hand
             deckStart = fullDeckCount(p, estate, G);
-            baronEffect(0, 1, G);
+            playBaron(1, 0, p, G);
             asserttrue(fullDeckCount(p, estate, G) == deckStart);
             #if (NOISY_TEST == 1)
               printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart);
@@ -97,7 +97,7 @@ int main() {
           //tests for gaining estate and changing hand position
           deckStart = fullDeckCount(p, estate, G);
           G->hand[p][handCount-1] = baron;
-          baronEffect(handCount-1, 0, G);
+          playBaron(0, handCount-1, p, G);
           asserttrue(fullDeckCount(p, estate, G) == deckStart+1);
           #if (NOISY_TEST == 1)
             printf("estates in player %d deck = %d, expected = %d\n", p, fullDeckCount(p, estate, G), deckStart+1);

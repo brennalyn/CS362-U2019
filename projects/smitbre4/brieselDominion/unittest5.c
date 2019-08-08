@@ -59,14 +59,14 @@ int main() {
           resetHand(G, p, handCount);
 
           G->hand[p][1] = council_room;
-          int result = mineEffect(0, 1, 4, G);
+          int result = playMine(1, 0, 4, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
           #endif
 
           resetHand(G, p, handCount);
-          result = mineEffect(0, 1, 7, G);
+          result = playMine(1, 0, 7, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
@@ -74,14 +74,14 @@ int main() {
 
           resetHand(G, p, handCount);
           G->hand[p][1] = province;
-          result = mineEffect(0, 1, 4, G);
+          result = playMine(1, 0, 4, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
           #endif
 
           resetHand(G, p, handCount);
-          result = mineEffect(0, 1, 2, G);
+          result = playMine(1, 0, 2, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
@@ -89,7 +89,7 @@ int main() {
 
           //test buying a treasure card that is > +3 cost
           resetHand(G, p, handCount);
-          result = mineEffect(0, 1, gold, G);
+          result = playMine(1, 0, gold, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
@@ -102,7 +102,7 @@ int main() {
           resetHand(G, p, handCount);
           int silverStart = fullDeckCount(p, silver, G);
           int copperStart = fullDeckCount(p, copper, G);
-          result = mineEffect(0, 1, silver, G);
+          result = playMine(1, 0, silver, p, G);
           asserttrue(fullDeckCount(p, silver, G) == silverStart+1);
           #if (NOISY_TEST == 1)
             printf("player has %d silver cards, expected = %d\n", fullDeckCount(p, silver, G), silverStart+1);
@@ -118,7 +118,7 @@ int main() {
           G->hand[p][1] = silver;
           silverStart = fullDeckCount(p, silver, G);
           int goldStart = fullDeckCount(p, gold, G);
-          result = mineEffect(0, 1, gold, G);
+          result = playMine(1, 0, gold, p, G);
           asserttrue(fullDeckCount(p, gold, G) == goldStart+1);
           #if (NOISY_TEST == 1)
             printf("player has %d gold cards, expected = %d\n", fullDeckCount(p, gold, G), goldStart+1);
@@ -133,12 +133,12 @@ int main() {
           resetHand(G, p, handCount);
           copperStart = fullDeckCount(p, copper, G);
           int copperSupply = G->supplyCount[copper];
-          result = mineEffect(0, 1, copper, G);
+          result = playMine(1, 0, copper, p, G);
           asserttrue(fullDeckCount(p, copper, G) == copperStart);
           #if (NOISY_TEST == 1)
             printf("player has %d copper cards, expected = %d\n", fullDeckCount(p, copper, G), copperStart);
           #endif
-          asserttrue(fullDeckCount(p, silver, G) == silverStart-1);
+          asserttrue(G->supplyCount[copper] == copperSupply-1);
           #if (NOISY_TEST == 1)
             printf("supply has %d copper cards, expected = %d\n", G->supplyCount[copper], copperSupply-1);
           #endif

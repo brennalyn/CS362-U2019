@@ -61,23 +61,23 @@ int main() {
           resetHand(G, p);
 
           //tests for bad parameters
-          int result = ambassadorEffect(0, 1, 4, G);
+          int result = playAmbassador(1, 4, 0, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
           #endif
-          result = ambassadorEffect(0, 1, -1, G);
+          result = playAmbassador(1, -1, 0, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
           #endif
-          result = ambassadorEffect(0, 0, 1, G);
+          result = playAmbassador(0, 1, 0, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
           #endif
           G->hand[p][1] = curse;
-          result = ambassadorEffect(0, 1, 2, G);
+          result = playAmbassador(1, 2, 0, p, G);
           asserttrue(result == -1);
           #if (NOISY_TEST == 1)
             printf("function returned = %d, expected = %d\n", result, -1);
@@ -95,7 +95,7 @@ int main() {
                 G->hand[p][2] = curse;
                 G->handCount[p] = handCount;
                 int curseCount = fullDeckCount(j, curse, G);
-                result = ambassadorEffect(0, 1, i, G);
+                result = playAmbassador(1, i, 0, p, G);
                 if (j == p) {
                   asserttrue(fullDeckCount(j, curse, G) == curseCount-i);
                   #if (NOISY_TEST == 1)

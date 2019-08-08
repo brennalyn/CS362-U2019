@@ -60,7 +60,7 @@ int main() {
           resetHand(G, p, handCount);
 
           //tests for choice to gain coins
-          minionEffect(0, 1, G);
+          playMinion(1, 0, 0, p, G);
           asserttrue(G->coins == 2);
           #if (NOISY_TEST == 1)
             printf("coins = %d, expected = %d\n", G->coins, 2);
@@ -73,7 +73,7 @@ int main() {
           for (int i = 0; i < numPlayer; i++) {
             if (G->handCount[i] > 4 || i == p) {
               int deckStart = G->discardCount[i] + G->handCount[i] + G->deckCount[i];
-              minionEffect(0, 2, G);
+              playMinion(0, 1, 0, p, G);
               int deckAfter = G->discardCount[i] + G->handCount[i] + G->deckCount[i];
               asserttrue(G->handCount[i] == 4);
               #if (NOISY_TEST == 1)
@@ -90,7 +90,7 @@ int main() {
               #endif
             } else {
               int tempCount = G->handCount[i];
-              minionEffect(0, 2, G);
+              playMinion(0, 1, 0, p, G);
               asserttrue(G->handCount[i] == tempCount);
               #if (NOISY_TEST == 1)
                 printf("cards in player %d hand = %d, expected = %d\n", i, G->handCount[i], tempCount);
