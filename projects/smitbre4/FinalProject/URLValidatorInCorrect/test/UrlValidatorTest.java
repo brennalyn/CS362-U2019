@@ -83,43 +83,46 @@ protected void setUp() {
       UrlValidator urlVal = new UrlValidator(null, null, options);
       assertTrue(urlVal.isValid("http://www.google.com"));
       assertTrue(urlVal.isValid("http://www.google.com/"));
-      int statusPerLine = 60;
-      int printed = 0;
-      if (printIndex)  {
-         statusPerLine = 6;
-      }
-      do {
-          StringBuilder testBuffer = new StringBuilder();
-         boolean expected = true;
-         for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex) {
-            int index = testPartsIndex[testPartsIndexIndex];
-            ResultPair[] part = (ResultPair[]) testObjects[testPartsIndexIndex];
-            testBuffer.append(part[index].item);
-            expected &= part[index].valid;
-         }
-         String url = testBuffer.toString();
-         boolean result = urlVal.isValid(url);
-         assertEquals(url, expected, result);
-         if (printStatus) {
-            if (printIndex) {
-               System.out.print(testPartsIndextoString());
-            } else {
-               if (result == expected) {
-                  System.out.print('.');
-               } else {
-                  System.out.print('X');
-               }
-            }
-            printed++;
-            if (printed == statusPerLine) {
-               System.out.println();
-               printed = 0;
-            }
-         }
-      } while (incrementTestPartsIndex(testPartsIndex, testObjects));
-      if (printStatus) {
-         System.out.println();
-      }
+      
+      //found what file it reads from
+      //File file = new File(".");
+      //for(String fileNames : file.list()) System.out.println(fileNames);
+      
+     BufferedReader reader;
+     int lineNumber = 0;
+     int failedTests = 0;
+     int passedTests = 0;
+     try {
+    	 reader = new BufferedReader(new FileReader("testUrls.txt"));
+    	 String line = reader.readLine();
+    	 while(line!= null) {
+    		 
+    		 lineNumber++;
+    		 System.out.println(lineNumber + ": " + line);
+    		 
+    		 //determine line isValid() boolean
+    		 boolean result = urlVal.isValid(line);
+    		 
+    		 if(lineNumber > 50) {
+    			 //if isValid() result == false then success
+    			 if(result == false) { System.out.println("Success");passedTests++;}
+    			 //if is Valid() result == true then failure
+    			 else { System.out.println("Failure");failedTests++;}	 
+    		 }
+    	 	 else {
+    	 		if(result == true) { System.out.println("Success");passedTests++;}
+    	 		else { System.out.println("Failure");failedTests++;}
+    	 	 }
+    		//next line
+    		line = reader.readLine();
+    	 }
+    	 reader.close();
+     } catch(IOException e) {
+    	 System.out.println("Cannot open file");
+    	 e.printStackTrace();
+     }
+      
+      System.out.println("Failures = "+ failedTests + "/100"+" Successes= " + passedTests+"/100");
    }
 
    public void testValidator202() {
