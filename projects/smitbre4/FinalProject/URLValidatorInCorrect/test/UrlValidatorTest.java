@@ -16,6 +16,7 @@
  */
 
 import junit.framework.TestCase;
+import java.util.Random;
 
 /**
  * Performs Validation Test for url validations.
@@ -47,6 +48,7 @@ protected void setUp() {
                 + UrlValidator.NO_FRAGMENTS;
 
         testIsValid(testUrlPartsOptions, options);
+        testRandIsValid(options);
    }
 
    public void testIsValidScheme() {
@@ -83,11 +85,11 @@ protected void setUp() {
       UrlValidator urlVal = new UrlValidator(null, null, options);
       assertTrue(urlVal.isValid("http://www.google.com"));
       assertTrue(urlVal.isValid("http://www.google.com/"));
-      
+
       //found what file it reads from
       //File file = new File(".");
       //for(String fileNames : file.list()) System.out.println(fileNames);
-      
+
      BufferedReader reader;
      int lineNumber = 0;
      int failedTests = 0;
@@ -96,18 +98,18 @@ protected void setUp() {
     	 reader = new BufferedReader(new FileReader("testUrls.txt"));
     	 String line = reader.readLine();
     	 while(line!= null) {
-    		 
+
     		 lineNumber++;
     		 System.out.println(lineNumber + ": " + line);
-    		 
+
     		 //determine line isValid() boolean
     		 boolean result = urlVal.isValid(line);
-    		 
+
     		 if(lineNumber > 50) {
     			 //if isValid() result == false then success
     			 if(result == false) { System.out.println("Success");passedTests++;}
     			 //if is Valid() result == true then failure
-    			 else { System.out.println("Failure");failedTests++;}	 
+    			 else { System.out.println("Failure");failedTests++;}
     		 }
     	 	 else {
     	 		if(result == true) { System.out.println("Success");passedTests++;}
@@ -121,9 +123,51 @@ protected void setUp() {
     	 System.out.println("Cannot open file");
     	 e.printStackTrace();
      }
-      
+
       System.out.println("Failures = "+ failedTests + "/100"+" Successes= " + passedTests+"/100");
    }
+
+
+   public void testRandIsValid(long options) {
+     UrlValidator urlVal = new UrlValidator(null, null, options);
+     assertTrue(urlVal.isValid("http://www.google.com"));
+     assertTrue(urlVal.isValid("http://www.google.com/"));
+
+     Random rand = new Random();
+     int n;
+
+     for (int i = 0; i < 5000; i++){
+       bool validURL = true;
+       String testURL = "";
+
+       n = rand.nextInt(testUrlScheme.length);
+       testURL += testUrlScheme[n].item;
+       validURL &= testUrlScheme[n].valid;
+
+       n = rand.nextInt(testUrlAuthority.length);
+       testURL += testUrlAuthority[n].item;
+       validURL &= testUrlAuthority[n].valid;
+
+       n = rand.nextInt(testUrlPort.length);
+       testURL += testUrlPort[n].item;
+       validURL &= testUrlPort[n].valid;
+
+       n = rand.nextInt(testPath.length);
+       testURL += testPath[n].item;
+       validURL &= testPath[n].valid;
+
+       n = rand.nextInt(testUrlQuery.length);
+       testURL += testUrlQuery[n].item;
+       validURL &= testUrlQuery[n].valid;
+
+       if (validURL && urlVal.isValid(testURL) || !validURL && !urlVal.isValid(testURL)) {
+         System.out.println("SUCCESS " + testURL);
+       } else {
+         System.out.println("FAIL " + testURL);
+       }
+     }
+   }
+
 
    public void testValidator202() {
        String[] schemes = {"http","https"};
@@ -478,24 +522,24 @@ protected void setUp() {
        assertFalse(validator.isValid("http://user:pa:ss@www.apache.org/path"));
        assertFalse(validator.isValid("http://user:pa@ss@www.apache.org/path"));
    }
-
-   public void testValidator382() {
-       UrlValidator validator = new UrlValidator();
-       assertTrue(validator.isValid("ftp://username:password@example.com:8042/over/there/index.dtb?type=animal&name=narwhal#nose"));
-   }
-
-   public void testValidator380() {
-       UrlValidator validator = new UrlValidator();
-       assertTrue(validator.isValid("http://www.apache.org:80/path"));
-       assertTrue(validator.isValid("http://www.apache.org:8/path"));
-       assertTrue(validator.isValid("http://www.apache.org:/path"));
-   }
-
-   public void testValidator420() {
-       UrlValidator validator = new UrlValidator();
-       assertFalse(validator.isValid("http://example.com/serach?address=Main Avenue"));
-       assertTrue(validator.isValid("http://example.com/serach?address=Main%20Avenue"));
-       assertTrue(validator.isValid("http://example.com/serach?address=Main+Avenue"));
+   //
+   // public void testValidator382() {
+   //     UrlValidator validator = new UrlValidator();
+   //     assertTrue(validator.isValid("ftp://username:password@example.com:8042/over/there/index.dtb?type=animal&name=narwhal#nose"));
+   // }
+   //
+   // public void testValidator380() {
+   //     UrlValidator validator = new UrlValidator();
+   //     assertTrue(validator.isValid("http://www.apache.org:80/path"));
+   //     assertTrue(validator.isValid("http://www.apache.org:8/path"));
+   //     assertTrue(validator.isValid("http://www.apache.org:/path"));
+   // }
+   //
+   // public void testValidator420() {
+   //     UrlValidator validator = new UrlValidator();
+   //     assertFalse(validator.isValid("http://example.com/serach?address=Main Avenue"));
+   //     assertTrue(validator.isValid("http://example.com/serach?address=Main%20Avenue"));
+   //     assertTrue(validator.isValid("http://example.com/serach?address=Main+Avenue"));
    }
 
    //-------------------- Test data for creating a composite URL
@@ -514,7 +558,13 @@ protected void setUp() {
                                new ResultPair("http:/", false),
                                new ResultPair("http:", false),
                                new ResultPair("http/", false),
-                               new ResultPair("://", false)};
+                               new ResultPair("://", false),
+                              new ResultPair("http", false),
+                              new ResultPair("httpd://", false),
+                              new ResultPair("g0-to+.", true),
+                              new ResultPair("not_valid://", false), // underscore not allowed
+                              new ResultPair("HtTp://", true),
+                              new ResultPair("telnet", false)}};
 
    ResultPair[] testUrlAuthority = {new ResultPair("www.google.com", true),
                                   new ResultPair("www.google.com.", true),
@@ -578,6 +628,8 @@ protected void setUp() {
 
    ResultPair[] testUrlQuery = {new ResultPair("?action=view", true),
                               new ResultPair("?action=edit&mode=up", true),
+                              new ResultPair("?action=edit mode=up", false),
+                              new ResultPair("?!#$%#$%$#=^&##@?&", false),
                               new ResultPair("", true)
    };
 
