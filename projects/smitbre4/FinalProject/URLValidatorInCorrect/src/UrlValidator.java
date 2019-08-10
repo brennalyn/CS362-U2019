@@ -337,7 +337,7 @@ public class UrlValidator implements Serializable {
             return false;
         }
 
-        return true;
+        return false; //UPDATED -- ADDED BUG TO ALWAYS RETURN FALSE
     }
 
     /**
