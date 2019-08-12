@@ -52,7 +52,7 @@ protected void setUp() {
         testRandIsValid(options);
    }
 
-   public void testIsValidScheme() {
+   /*public void testIsValidScheme() {
       if (printStatus) {
          System.out.print("\n testIsValidScheme() ");
       }
@@ -74,8 +74,8 @@ protected void setUp() {
          System.out.println();
       }
 
-   }
-
+   } 
+*/
    /**
     * Create set of tests by taking the testUrlXXX arrays and
     * running through all possible permutations of their combinations.
@@ -84,8 +84,8 @@ protected void setUp() {
     */
    public void testIsValid(Object[] testObjects, long options) {
       UrlValidator urlVal = new UrlValidator(null, null, options);
-      assertTrue(urlVal.isValid("http://www.google.com"));
-      assertTrue(urlVal.isValid("http://www.google.com/"));
+      //assertTrue(urlVal.isValid("http://www.google.com"));
+      //assertTrue(urlVal.isValid("http://www.google.com/"));
 
       //found what file it reads from
       //File file = new File(".");
@@ -129,13 +129,16 @@ protected void setUp() {
    }
 
 
-   public void testRandIsValid(long options) {
+   @SuppressWarnings("null")
+public void testRandIsValid(long options) {
      UrlValidator urlVal = new UrlValidator(null, null, options);
-     assertTrue(urlVal.isValid("http://www.google.com"));
-     assertTrue(urlVal.isValid("http://www.google.com/"));
+     //assertTrue(urlVal.isValid("http://www.google.com"));
+     //assertTrue(urlVal.isValid("http://www.google.com/"));
 
      Random rand = new Random();
      int n;
+     int validFailures = 0;
+     int invalidFailures = 0;
 
      for (int i = 0; i < 5000; i++){
        boolean validURL = true;
@@ -160,13 +163,25 @@ protected void setUp() {
        n = rand.nextInt(testUrlQuery.length);
        testURL += testUrlQuery[n].item;
        validURL &= testUrlQuery[n].valid;
-
-       if (validURL && urlVal.isValid(testURL) || !validURL && !urlVal.isValid(testURL)) {
-         System.out.println("SUCCESS " + testURL);
-       } else {
-         System.out.println("FAIL " + testURL);
+       
+       if (validURL && urlVal.isValid(testURL)) {
+         //System.out.println("SUCCESS - expected valid returned valid: " + testURL);
+       }
+       else if (!validURL && !urlVal.isValid(testURL)) {
+           //System.out.println("SUCCESS - expected invalid returned invalid: " + testURL);    	   
+       }
+       else if (validURL && !urlVal.isValid(testURL)) {
+    	   System.out.println("FAILURE - expected valid returned invalid: " + testURL);
+    	   validFailures++;
+       }
+       else {
+    	   System.out.println("FAILURE - expected invalid returned valid: " + testURL);
+    	   invalidFailures++;
        }
      }
+     System.out.println("***SUMMARY OF FAILURES***");
+     System.out.println("# Valid URLs incorrectly evaluated: " + validFailures);
+     System.out.println("# Invalid URLs incorrectly evaluated: " + invalidFailures);
    }
 
 //
