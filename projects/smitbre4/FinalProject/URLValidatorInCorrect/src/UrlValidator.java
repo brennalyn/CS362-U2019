@@ -278,8 +278,9 @@ public class UrlValidator implements Serializable {
             allowedSchemes = new HashSet<String>(schemes.length);
             for(int i=0; i < schemes.length; i++) {
                 allowedSchemes.add(schemes[i].toLowerCase(Locale.ENGLISH));
-            }
-        }
+
+            } 
+        } 
 
         this.authorityValidator = authorityValidator;
     }
@@ -329,15 +330,15 @@ public class UrlValidator implements Serializable {
             return false;
         }
 
-        if (!isValidQuery(urlMatcher.group(PARSE_URL_QUERY))) {
+        /* if (!isValidQuery(urlMatcher.group(PARSE_URL_QUERY))) {
             return false;
-        }
+        } //BUG FOR UNIT TESTING - UNCOMMENT TO FIX / UNCOMMENT FOR RANDOM TESTING */
 
         if (!isValidFragment(urlMatcher.group(PARSE_URL_FRAGMENT))) {
             return false;
         }
-
-        return false; //UPDATED -- ADDED BUG TO ALWAYS RETURN FALSE
+        //return true; //COMMENT OUT FOR RANDOM TESTING
+        return false; //BUG FOR RANDOM TESTING - UNCOMMENT FOR RANDOM TESTING
     }
 
     /**
@@ -460,7 +461,7 @@ public class UrlValidator implements Serializable {
         }
         
         int slash2Count = countToken("//", path);
-        if (isOff(ALLOW_2_SLASHES) && (slash2Count > 0)) {
+        if (!isOff(ALLOW_2_SLASHES) && (slash2Count > 0)) { //BUG FOR UNIT TESTING - REMOVE EXCLAMATION POINT TO FIX
             return false;
         }
 

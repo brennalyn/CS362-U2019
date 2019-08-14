@@ -137,6 +137,8 @@ public void testRandIsValid(long options) {
 
      Random rand = new Random();
      int n;
+     int validSuccesses = 0;
+     int invalidSuccesses = 0;
      int validFailures = 0;
      int invalidFailures = 0;
 
@@ -165,10 +167,12 @@ public void testRandIsValid(long options) {
        validURL &= testUrlQuery[n].valid;
        
        if (validURL && urlVal.isValid(testURL)) {
-         //System.out.println("SUCCESS - expected valid returned valid: " + testURL);
+           //System.out.println("SUCCESS - expected valid returned valid: " + testURL);
+           validSuccesses++;
        }
        else if (!validURL && !urlVal.isValid(testURL)) {
-           //System.out.println("SUCCESS - expected invalid returned invalid: " + testURL);    	   
+           //System.out.println("SUCCESS - expected invalid returned invalid: " + testURL);
+           invalidSuccesses++;
        }
        else if (validURL && !urlVal.isValid(testURL)) {
     	   System.out.println("FAILURE - expected valid returned invalid: " + testURL);
@@ -179,6 +183,11 @@ public void testRandIsValid(long options) {
     	   invalidFailures++;
        }
      }
+     
+     System.out.println("***SUMMARY OF SUCCESSES***");
+     System.out.println("# Valid URLs correctly evaluated: " + validSuccesses);
+     System.out.println("# Invalid URLs correctly evaluated: " + invalidSuccesses);
+     
      System.out.println("***SUMMARY OF FAILURES***");
      System.out.println("# Valid URLs incorrectly evaluated: " + validFailures);
      System.out.println("# Invalid URLs incorrectly evaluated: " + invalidFailures);
